@@ -16,7 +16,14 @@ _global_script_class_icons={
 [application]
 
 config/name="roguelike"
+run/main_scene="res://Game.tscn"
 config/icon="res://icon.png"
+
+[display]
+
+window/size/width=480
+window/size/height=270
+window/stretch/mode="viewport"
 
 [rendering]
 
