@@ -3,7 +3,7 @@
 [ext_resource path="res://Game.gd" type="Script" id=1]
 [ext_resource path="res://assets/colored.png" type="Texture" id=2]
 
-[sub_resource type="TileSet" id=1]
+[sub_resource type="TileSet" id=3]
 0/name = "colored.png 0"
 0/texture = ExtResource( 2 )
 0/tex_offset = Vector2( 0, 0 )
@@ -30,7 +30,7 @@ region = Rect2( 459, 17, 16.267, 16.267 )
 script = ExtResource( 1 )
 
 [node name="TileMap" type="TileMap" parent="."]
-tile_set = SubResource( 1 )
+tile_set = SubResource( 3 )
 cell_size = Vector2( 16, 16 )
 format = 1
 
@@ -50,5 +50,27 @@ drag_margin_bottom = 0.0
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
-margin_right = 40.0
-margin_bottom = 40.0
+margin_right = 480.0
+margin_bottom = 32.0
+color = Color( 0.113725, 0.113725, 0.113725, 0.717647 )
+
+[node name="Level" type="Label" parent="CanvasLayer"]
+margin_left = 32.0
+margin_right = 112.0
+margin_bottom = 32.0
+text = "Level:"
+valign = 1
+
+[node name="HP" type="Label" parent="CanvasLayer"]
+margin_left = 224.0
+margin_right = 304.0
+margin_bottom = 32.0
+text = "Score:"
+valign = 1
+
+[node name="Score" type="Label" parent="CanvasLayer"]
+margin_left = 128.0
+margin_right = 208.0
+margin_bottom = 32.0
+text = "HP:"
+valign = 1
