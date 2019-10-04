@@ -12,12 +12,14 @@ const LEVEL_ROOM_COUNTS = [5, 7, 9, 12, 15]
 const MIN_ROOM_DIMENSION = 5
 const MAX_ROOM_DIMENSION = 8
 
-enum Tile {Wall, Door, Floor, Ladder, Stone}
-const WALL = Vector2(10,17)
-const FLOOR = Vector2(0,0)
-const DOOR = Vector2(10,9)
-const STONE = Vector2(4,0)
-const LADDER = Vector2(0,6)
+var TILE = {
+	WALL = Vector2(10,17),
+	FLOOR = Vector2(0,0),
+	DOOR = Vector2(10,9),
+	STONE = Vector2(4,0),
+	LADDER = Vector2(0,6)	
+}
+
 
 # current level
 var level_num = 0
@@ -50,10 +52,11 @@ func build_level():
 	for x in range(level_size.x):
 		map.append([])
 		for y in range(level_size.y):
-			map[x].append(Tile.Stone)
-			tile_map.set_cell(x, y, 0, false,false,false, STONE)
+			map[x].append(TILE.STONE)
+			tile_map.set_cell(x, y, 0, false,false,false, TILE.STONE)
 			
-	var free_regions = [Rect2(Vector(2,2), level_size - Vector2(4,4))]		
+			
+	var free_regions = [Rect2(Vector2(2,2), level_size - Vector2(4,4))]	
 	var num_rooms = LEVEL_ROOM_COUNTS[level_num]
 	for i in range(num_rooms):
 		add_room(free_regions)
@@ -85,11 +88,26 @@ func add_room(free_regions):
 	var room = Rect2(start_x, start_y, size_x, size_y)
 	rooms.append(room)
 	
+	for x in range(start_x, start_x + size_x):
+		set_tile(x, start_y, TILE.WALL)
+		set_tile(x, start_y + size_y - 1, TILE.WALL)
+	
+	for y in range(start_y + 1, start_y + size_y -1):
+		set_tile(start_x, y, TILE.WALL)
+		set_tile(start_x + size_x, y, TILE.WALL)
+	
+		for x in range(start_x + 1, start_x + size_x - 1):
+			set_tile(x, y, TILE.FLOOR)
+	
+	cut_regions(free_regions, room)
 	
 	
+func cut_regions(free_regions, region_to_remove):
+	pass	
 	
-	
-	
+func set_tile(x,y,type):
+	map[x][y] = type
+	tile_map.set_cell(x, y, 0, false,false,false, type)
 	
 	
 	
