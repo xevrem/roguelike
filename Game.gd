@@ -64,7 +64,7 @@ func build_level():
 			break
 			
 func add_room(free_regions):
-	var region = free_regions[randi() * free_regions.size()]
+	var region = free_regions[randi() % free_regions.size()]
 	
 	var size_x = MIN_ROOM_DIMENSION
 	if region.size.x > MIN_ROOM_DIMENSION:
@@ -83,7 +83,7 @@ func add_room(free_regions):
 		
 	var start_y = region.position.y
 	if region.size.y > size_y:
-		start_y += randi() % int(region.size.x - size_y)
+		start_y += randi() % int(region.size.y - size_y)
 		
 	var room = Rect2(start_x, start_y, size_x, size_y)
 	rooms.append(room)
@@ -92,9 +92,9 @@ func add_room(free_regions):
 		set_tile(x, start_y, TILE.WALL)
 		set_tile(x, start_y + size_y - 1, TILE.WALL)
 	
-	for y in range(start_y + 1, start_y + size_y -1):
+	for y in range(start_y + 1, start_y + size_y - 1):
 		set_tile(start_x, y, TILE.WALL)
-		set_tile(start_x + size_x, y, TILE.WALL)
+		set_tile(start_x + size_x - 1, y, TILE.WALL)
 	
 		for x in range(start_x + 1, start_x + size_x - 1):
 			set_tile(x, y, TILE.FLOOR)
@@ -103,7 +103,32 @@ func add_room(free_regions):
 	
 	
 func cut_regions(free_regions, region_to_remove):
-	pass	
+	var removal_queue = []
+	var addition_queue = []
+	
+	for region in free_regions:
+		if region.intersects(region_to_remove):
+			removal_queue.append(region)
+			
+			var leftover_left = region_to_remove.position.x - region.position.x - 1
+			var leftover_right = region.end.x - region_to_remove.end.x - 1
+			var leftover_above = region_to_remove.position.y - region.position.y - 1
+			var leftover_below = region.end.y - region_to_remove.end.y - 1
+			
+			if leftover_left >= MIN_ROOM_DIMENSION:
+				addition_queue.append(Rect2(region.position, Vector2(leftover_left, region.size.y)))
+			if leftover_right >= MIN_ROOM_DIMENSION:
+				addition_queue.append(Rect2(Vector2(region_to_remove.end.x + 1, region.position.y), Vector2(leftover_right, region.size.y)))
+			if leftover_above >= MIN_ROOM_DIMENSION:
+				addition_queue.append(Rect2(region.position, Vector2(region.size.x, leftover_above)))
+			if leftover_below >= MIN_ROOM_DIMENSION:
+				addition_queue.append(Rect2(Vector2(region.position.x, region_to_remove.end.y + 1), Vector2(region.size.x, leftover_below)))
+				
+	for region in removal_queue:
+		free_regions.erase(region)
+		
+	for region in addition_queue:
+		free_regions.append(region)
 	
 func set_tile(x,y,type):
 	map[x][y] = type
